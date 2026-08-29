@@ -20,7 +20,7 @@ jobs:
         with:
           node-version: '24'
 
-      - run: npm install
+      - run: npm ci
 
       - run: node generar-respaldo.js
         env:

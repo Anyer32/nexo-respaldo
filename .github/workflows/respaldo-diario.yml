@@ -2,13 +2,11 @@ name: Respaldo diario Nexo
 
 on:
   schedule:
-    # OJO: esta hora está en UTC, no en tu huso horario — ajustá el número según
-    # la guía antes de subir este archivo. Ejemplo tal cual está: 16:00 UTC.
-    - cron: '0 16 * * *'
-  workflow_dispatch: {}   # te deja tirarlo a mano desde la pestaña "Actions" para probar
+    - cron: '0 16 * * *'   # ajustá la hora UTC según tu huso
+  workflow_dispatch: {}
 
 permissions:
-  contents: write   # necesario para que el workflow pueda subir el .xlsx actualizado
+  contents: write
 
 jobs:
   respaldo:
@@ -18,9 +16,9 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: '24'
+          node-version: '22'   # Node 22 LTS
 
-      - run: npm ci
+      - run: npm install       # en vez de npm ci
 
       - run: node generar-respaldo.js
         env:

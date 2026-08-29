@@ -1,0 +1,13 @@
+{
+  "name": "nexo-respaldo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Genera un respaldo diario en Excel (catálogo + GSI) de la base de Nexo.",
+  "scripts": {
+    "generar": "node generar-respaldo.js"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2",
+    "exceljs": "^4"
+  }
+}

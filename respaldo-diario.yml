@@ -1,0 +1,38 @@
+name: Respaldo diario Nexo
+
+on:
+  schedule:
+    # OJO: esta hora está en UTC, no en tu huso horario — ajustá el número según
+    # la guía antes de subir este archivo. Ejemplo tal cual está: 16:00 UTC.
+    - cron: '0 16 * * *'
+  workflow_dispatch: {}   # te deja tirarlo a mano desde la pestaña "Actions" para probar
+
+permissions:
+  contents: write   # necesario para que el workflow pueda subir el .xlsx actualizado
+
+jobs:
+  respaldo:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - run: npm install
+
+      - run: node generar-respaldo.js
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+          RESPALDO_USUARIO: ${{ secrets.RESPALDO_USUARIO }}
+          RESPALDO_PASSWORD: ${{ secrets.RESPALDO_PASSWORD }}
+
+      - name: Guardar el archivo actualizado en el repo
+        run: |
+          git config user.name "Respaldo automático"
+          git config user.email "actions@github.com"
+          git add respaldo-nexo.xlsx
+          git diff --staged --quiet || git commit -m "Respaldo $(date -u +'%Y-%m-%d')"
+          git push
